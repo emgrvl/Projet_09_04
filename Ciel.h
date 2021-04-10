@@ -42,7 +42,7 @@ public:
 class Ciel : public Champ_potentiel{
 private:
     // attributs spécifiques à la sous-classe
-    std::vector<std::vector<std::vector<CubedAir>>> boite3D;
+    CubedAir boite3D;
 public:
     //Ciel(unsigned int Nx = 0.0, unsigned int Ny = 0.0, unsigned int Nz = 0.0, double lambda = 0.0)
     //: Champ_potentiel(Nx(Nx), Ny(Ny), Nz(Nz), lambda(lambda),collection3D(Nx, std::vector<std::vector<Potentiel>>(Ny, std::vector<Potentiel>(Nz))))
