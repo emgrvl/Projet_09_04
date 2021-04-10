@@ -65,3 +65,15 @@ void CubedAir:: p_rosee(){
         }
     }
 }
+// determine s'il y a formation de nuage ou pas
+void CubedAir:: etat(){
+    for (int i(0); i < Nx; ++i) {
+        for (int j(0); i < Ny; ++j) {
+            for (int k(0); i < Nz; ++k) {
+                if (Cube[i][j][k].p_rosee < Cube[i][j][k].p_eau){
+                    Cube[i][j][k].nuage = true;
+                }
+            }
+        }
+    }
+}
