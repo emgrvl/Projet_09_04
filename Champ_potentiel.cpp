@@ -97,7 +97,7 @@ void ChampPotentiels:: affichage(){// ceci fonctionne !! mais gnuplot n'affiche 
         }
     }
 }
-
+// affichage du laplacien pour chaque coordonnée
 void ChampPotentiels::lapla_affichage() {
     for (int i(0); i < Nx-1; ++i){
         for (int j(0); j < Ny-1; ++j){
@@ -131,7 +131,8 @@ void ChampPotentiels:: iteration() {
     for (int i = 1; i < Nx - 1; ++i) {
         for (int j = 1; j < Ny - 1; ++j) {
             for (int k = 1; k < Nz - 1; ++k) {
-                u = collection3D[i][j][k].get_potentiel() + epsilon * collection3D[i][j][k].get_laplacien();
+                // Em: j'ai juste retiré l'égalité parce qu'on ne l'a pas surchargée pour les vecteur2D
+                 u.set_coord((collection3D[i][j][k].get_potentiel() + epsilon * collection3D[i][j][k].get_laplacien()).get_x(), (collection3D[i][j][k].get_potentiel() + epsilon * collection3D[i][j][k].get_laplacien()).get_x());
                //ici j'ai juste modifié que c'est un set_potentiel et non un set_laplacien
                collection3D[i][j][k].set_potentiel(u.get_x(), u.get_y());
             }
@@ -201,6 +202,72 @@ void ChampPotentiels::affiche_total() {
                     <<collection3D[i][j][k].get_potentiel().get_y()<<" "<<vitesse(i,j,k)[0]<<" "
                     <<vitesse(i,j,k)[1]<<" "<<vitesse(i,j,k)[2]<<" "
                     <<norme3D_2(vitesse(i,j,k))<<endl;
+            }
+        }
+    }
+}
+
+
+//------------------------------------------------------------------------------------------------------------
+// P8: Ciel et Nuages
+
+
+// calcul de la vitesse 
+void CubedAir:: v_vent(){
+    for (int i(0); i < Nx; ++i) {
+        for (int j(0); i < Ny; ++j) {
+            for (int k(0); i < Nz; ++k) {
+                Cube[i][j][k].v_vent= ; // pas fini
+            }
+        }
+    }
+}
+// calcul de l'enthalpie
+void CubedAir:: h(){
+    for (int i(0); i < Nx; ++i) {
+        for (int j(0); i < Ny; ++j) {
+            for (int k(0); i < Nz; ++k) {
+                Cube[i][j][k].h = bernouilli - g*z - 1/2 * Cube[i][j][k].v_vent * Cube[i][j][k].v_vent ; // c'est quoi z?
+            }
+        }
+    }
+}
+// calcul de la température
+void CubedAir::T(){
+    for (int i(0); i < Nx; ++i) {
+        for (int j(0); i < Ny; ++j) {
+            for (int k(0); i < Nz; ++k) {
+                Cube[i][j][k].T = 2/7 * (M_airsec/R) * Cube[i][j][k].h ;
+            }
+        }
+    }
+}
+// calcul de la pression
+void CubedAir:: pression(){
+    for (int i(0); i < Nx; ++i) {
+        for (int j(0); i < Ny; ++j) {
+            for (int k(0); i < Nz; ++k) {
+                Cube[i][j][k].pression = P_inf * pow(T_inf, -7/2) * pow(Cube[i][j][k].T, 7/2);
+            }
+        }
+    }
+}
+// calcul de la pression partielle de vapeur d'eau
+void CubedAir:: p_eau(){
+    for (int i(0); i < Nx; ++i) {
+        for (int j(0); i < Ny; ++j) {
+            for (int k(0); i < Nz; ++k) {
+                Cube[i][j][k].p_eau = Cube[i][j][k].tau* Cube[i][j][k].pression / (M_eau/M_airsec+ Cube[i][j][k].tau) ;
+            }
+        }
+    }
+}
+// calcul de la pression vapeur saturante d'eau
+void CubedAir:: p_rosee(double P_ref){
+    for (int i(0); i < Nx; ++i) {
+        for (int j(0); i < Ny; ++j) {
+            for (int k(0); i < Nz; ++k) {
+                Cube[i][j][k].p_rosee = P_ref * exp(13.96 - 5208/Cube[i][j][k].T) ;
             }
         }
     }
