@@ -34,7 +34,8 @@ public:
     void p_eau();
     // calcul de la pression vapeur saturante d'eau
     void p_rosee();
-    //
+    // nuage ou non
+    void etat();
 
 };
 
