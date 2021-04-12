@@ -3,46 +3,42 @@
 #include <vector>
 
 
-class CubedAir: public Boite{
+//------- Classe CubedAir ------------------
+class CubedAir : Champ_potentiel{
 private:
-    struct Cellule{ // petite structure pour rassembler ce que contient chaque cellule du ciel, aka chaque cube d'air
         double v_vent; //vitesse du vent
-        double h;
-        double T;
-        double pression;
-        double p_eau; // pression partielle de vapeur d'eau
+//        double h;
+//        double T;
+//        double pression;
+//        double p_eau; // pression partielle de vapeur d'eau
         double tau; // taux d'humidité
-        double p_rosee;
-        bool nuage;// vrai = nuage, faux = pas nuage
+//        double p_rosee;
+//        bool nuage;// vrai = nuage, faux = pas nuage
+//        , h(h), T(T), pression(p), p_eau(p_e), tau(to), p_rosee(p_r), nuage(n)
 
-    };
-    std::vector<std::vector<std::vector<Cellule>>> Cube; // trois coordonnées donc tableau en trois dimensions
 
 public:
     // constructeur:
-    //CubedAir()
-    //:Cube(Nx, std::vector<std::vector<Cellule>>(Ny, std::vector<Cellule>(Nz)))
-    // calcul de la vitesse
-    void v_vent();
+    CubedAir( unsigned int Nx = 0.0, unsigned int Ny = 0.0, unsigned int Nz = 0.0, double lambda = 0.0, double v = 0, double to = 0)
+    :Champ_potentiel(Nx,Ny,Nz,lambda), v_vent(v), tau(to) {}
     // calcul de l'enthalpie
-    void h();
+    double h();
     // calcul de la température
-    void T();
+    double T();
     // calcul de la pression
-    void pression();
+    double pression();
     // calcul de la pression partielle de vapeur d'eau
-    void p_eau();
+    double p_eau();
     // calcul de la pression vapeur saturante d'eau
-    void p_rosee();
+    double p_rosee();
     // nuage ou non
-    void etat();
+    bool etat();
 
 };
-
 class Ciel : public Champ_potentiel{
 private:
-    // attributs spécifiques à la sous-classe
-    CubedAir boite3D;
+     // attributs spécifiques à la sous-classe
+    std::vector<std::vector<std::vector<CubedAir>>> Cube;
 public:
     //Ciel(unsigned int Nx = 0.0, unsigned int Ny = 0.0, unsigned int Nz = 0.0, double lambda = 0.0)
     //: Champ_potentiel(Nx(Nx), Ny(Ny), Nz(Nz), lambda(lambda),collection3D(Nx, std::vector<std::vector<Potentiel>>(Ny, std::vector<Potentiel>(Nz))))
